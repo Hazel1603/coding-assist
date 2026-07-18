@@ -2,7 +2,7 @@
 
 A coding-agent project for learning reliable and secure multi-tool agent behavior in a controlled repository.
 
-This project follows the roadmap in `FUNCTIONAL_SPEC.md`. It builds on the earlier assistant projects summarized in `PREVIOUS_PROJECTS.md`, so those files should be passed in as background context when working on the implementation.
+This project follows the roadmap in `FUNCTIONAL_SPEC.md`. It builds on the earlier assistant projects summarized in `PREVIOUS_PROJECTS.md`.
 
 ## Goal
 

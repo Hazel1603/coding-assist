@@ -73,7 +73,7 @@ The first project was a command-line AI assistant focused on direct model intera
 
 ## Project 2: Personal Knowledge Assistant
 
-The second project was a personal knowledge assistant focused on retrieval-augmented generation concepts, document chunking, context construction, citation, and retrieval evaluation design.
+The second project was a personal knowledge assistant focused on retrieval-augmented generation concepts, document chunking, context construction, citation, retrieval evaluation, context-strategy comparison, and re-indexing.
 
 The central learning question was:
 
@@ -141,7 +141,20 @@ Sources and Evaluation
 - Displayed citations for source chunks used in an answer.
 - Included note path and chunk index in citation strings.
 - Deduplicated repeated citation references.
-- Covered loader, search, chunking, embedding, vector storage, retrieval, context construction, answer generation, citation, print, and CLI behavior with tests.
+- Loaded a retrieval evaluation dataset from a local file.
+- Defined evaluation questions with expected source notes and expected concepts.
+- Ran retrieval against every evaluation question.
+- Calculated Retrieval Recall@K for expected source notes.
+- Reported per-question retrieval results.
+- Reported aggregate retrieval metrics across the evaluation dataset.
+- Reported approximate context size for retrieved results.
+- Compared retrieval settings such as `top_k=3` and `top_k=5`.
+- Made quality versus context-cost tradeoffs visible.
+- Re-indexed notes after files were added, changed, or deleted.
+- Updated stored vector records for changed notes.
+- Removed stored vector records for deleted notes.
+- Preserved deterministic behavior for unchanged notes during re-indexing.
+- Covered loader, search, chunking, embedding, vector storage, retrieval, context construction, answer generation, citation, evaluation, strategy comparison, re-indexing, print, and CLI behavior with tests.
 
 ### Concepts Covered
 
@@ -165,28 +178,34 @@ Sources and Evaluation
 - Friendly fallback behavior when context is missing.
 - Source citation for retrieved chunks.
 - Deduplicating citations.
+- Retrieval evaluation datasets.
+- Expected-source evaluation cases.
+- Retrieval Recall@K.
+- Per-question and aggregate retrieval metrics.
+- Approximate context-size measurement.
+- Comparing retrieval settings.
+- Quality versus context-cost tradeoffs.
+- Re-indexing changed notes.
+- Removing stale vector records for deleted notes.
+- Preserving deterministic behavior across index updates.
 - Test-driven development of retrieval components.
 - Using fake models and fake embeddings to learn architecture before adding provider complexity.
 
-### Planned Or Partially Covered Concepts
+### Concepts Introduced But Not Deeply Explored
 
-- Loading a retrieval evaluation dataset.
-- Defining evaluation questions with expected source notes.
-- Calculating Retrieval Recall@K.
-- Reporting per-question retrieval results.
-- Reporting aggregate retrieval metrics.
-- Measuring approximate context size.
-- Comparing retrieval settings such as `top_k=3` and `top_k=5`.
-- Making quality versus context-cost tradeoffs visible.
-- Re-indexing after notes are added, changed, or deleted.
-- Preserving deterministic behavior for unchanged notes during re-indexing.
+- Real embedding-provider integration.
+- Persistent vector storage beyond the local learning implementation.
+- Retrieval latency and cost measurement with production-style model calls.
+- Answer-quality evaluation beyond simple expected concepts.
+- Prompt-injection risk from retrieved external content.
+- Long-running workflow state across multi-step agent tasks.
 
 ## Current Learning Baseline
 
 At this point, the learner has already built two important foundations:
 
 - A model-facing assistant that can call tools, maintain conversation state, produce structured output, and log usage.
-- A retrieval-facing assistant that can load notes, chunk them, embed them with a fake embedding function, store them in a simple vector database, retrieve relevant chunks, build model context, answer from context, and cite sources.
+- A retrieval-facing assistant that can load notes, chunk them, embed them with a fake embedding function, store them in a simple vector database, retrieve relevant chunks, build model context, answer from context, cite sources, evaluate retrieval quality, compare context strategies, and re-index changed notes.
 
 The next project should assume familiarity with:
 
@@ -211,6 +230,11 @@ The next project should assume familiarity with:
 - Retrieval ranking.
 - Context construction.
 - Citation.
+- Evaluation datasets.
+- Retrieval Recall@K.
+- Context-size measurement.
+- Retrieval strategy comparison.
+- Re-indexing and index update behavior.
 - Retrieval-focused testing.
 
 ## Good Next Learning Directions
@@ -220,7 +244,6 @@ Future projects should build on the existing foundation instead of rebuilding it
 - Replacing fake embeddings with real embeddings and measuring the improvement.
 - Adding persistent vector storage after the indexing lifecycle is clear.
 - Connecting answer generation to a real LLM after context construction is testable.
-- Building retrieval evaluation before optimizing retrieval quality.
 - Measuring latency, token usage, and cost for retrieval-augmented workflows.
 - Studying prompt injection risks from retrieved external content.
 - Adding stronger tool security boundaries.
@@ -244,5 +267,9 @@ The next project should not spend major time reintroducing:
 - Basic fake embedding generation.
 - Basic in-memory vector search.
 - Basic source citation formatting.
+- Basic retrieval evaluation datasets.
+- Basic Recall@K measurement.
+- Basic retrieval strategy comparison.
+- Basic re-indexing of changed notes.
 
 These can be reused or extended as needed, but the learning focus should move toward deeper agent behavior, evaluation, reliability, safety, persistence, and observability.
