@@ -42,18 +42,28 @@ This project deliberately focuses on reliability and security:
 
 ## Current Status
 
-v0.1 is implemented. The CLI can safely read and explain a specific Java file
-inside a configured workspace.
+v0.2 is implemented. The CLI can safely read a known Java file or search a
+configured workspace and build compact repository context for an answer.
 
 Current capabilities:
 
 - interactive `explain <path>` command
+- interactive `ask <literal-search-query>` command
 - workspace-boundary and path-traversal protection
-- Java-only file validation
+- case-insensitive Java-extension validation
 - bounded UTF-8 file reading
+- deterministic filename and content search
+- bounded search results, snippets, and working context
+- source paths and line numbers in repository context
+- friendly search-input and repository file errors
 - streamed model responses
 - friendly file and model error reporting
-- unit tests using a fixture Java file
+- unit tests for reading, searching, context construction, agent prompts, and CLI routing
+
+In v0.2, command routing is explicit: `explain` reads a known file and `ask`
+searches using the literal text after the command. Natural-language query
+interpretation and model-directed selection between repository tools are
+planned for v0.3.
 
 The intended tool surface is:
 
@@ -120,7 +130,7 @@ Keep these two kinds of state separate:
 
 Conversation history alone is not enough to make a coding agent reliable after a failure or context reset.
 
-## Run v0.1
+## Run v0.2
 
 Create a `.env` file containing `OPENAI_API_KEY` and `OPENAI_MODEL`, then run:
 
@@ -145,7 +155,13 @@ Then enter:
 
 ```text
 explain ExampleService.java
+ask ExampleService
+exit
 ```
+
+`ask` currently expects a literal identifier or search term that is likely to
+appear in a Java path or source line. A question such as `ask Where is user
+validation performed?` requires the natural-language retrieval added in v0.3.
 
 Run the project's tests:
 
@@ -176,7 +192,27 @@ It should:
 - return deterministic results
 - include path, line number when available, and snippet
 - cap result count and snippet size
+- accept Java extensions consistently regardless of case
+- reject missing workspaces, empty queries, and invalid limits
+- report unreadable and invalid UTF-8 Java files
 - avoid sending huge search output into model context
+
+### Working context
+
+Working-context construction groups search matches by file, retains source line
+numbers, removes repeated file headings, and applies a total character budget
+before repository evidence is sent to the model.
+
+Repository content is framed as untrusted evidence in the model prompt. The
+context builder remains deterministic and does not interpret instructions found
+inside source files.
+
+## Next Version
+
+v0.3 adds natural-language repository questions and model-directed retrieval.
+The model will be able to choose between reading a known file and searching the
+repository, gather additional evidence when needed, and report likely bugs with
+source locations, reasoning, impact, and confidence.
 
 ### `write_file()`
 

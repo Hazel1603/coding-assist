@@ -91,7 +91,7 @@ Tool behavior must be validated by application code. The model should never be t
 
 - v0.1 - Read and explain a Java file.
 - v0.2 - Search repository files and build working context.
-- v0.3 - Find likely bugs with evidence.
+- v0.3 - Add natural-language repository questions, model-directed retrieval, and evidence-based bug finding.
 - v0.4 - Generate tests as proposed patches.
 - v0.5 - Refactor code through controlled writes.
 - v0.6 - Add write permissions and approval policy.
@@ -104,7 +104,9 @@ Tool behavior must be validated by application code. The model should never be t
 
 ## Current Implementation Status
 
-Not yet implemented.
+v0.2 is implemented. The CLI supports explicit commands for reading a known
+Java file and searching the repository with a literal query. Model-directed
+tool selection and natural-language query interpretation are deferred to v0.3.
 
 This project should start from the existing learning baseline rather than rebuilding earlier introductory pieces. The assistant may reuse patterns for CLI interaction, model calls, structured outputs, logging, fake or real model abstractions, and tests.
 
@@ -120,17 +122,22 @@ This project should start from the existing learning baseline rather than rebuil
 
 ## v0.2 Acceptance Criteria
 
-- User can ask questions that require searching the repository.
+- User can use an explicit search query to ask a repository question.
 - `search_files()` can search filenames and file contents.
 - Search is deterministic and returns stable ordering.
 - Search results include path, line number where available, and a short snippet.
 - Large search results are capped before being sent to the model.
-- The assistant can choose between reading a known file and searching for relevant files.
+- The CLI routes known-file requests through `explain` and literal repository searches through `ask`.
+- Search validates its workspace, query, limits, supported file types, and file-read errors.
+- Working context groups results by file, preserves source locations, and enforces a total character budget.
 - Search and context-construction behavior are covered by tests.
 
 ## v0.3 Acceptance Criteria
 
 - User can ask the assistant to find bugs in a Java file or related module.
+- User can ask natural-language repository questions without supplying an exact search term.
+- The model can choose between reading a known file and searching for relevant files.
+- The model can perform multiple retrieval steps when more evidence is required.
 - The assistant gathers relevant code before making bug claims.
 - Each reported bug includes file path, location when known, reasoning, impact, and confidence.
 - The assistant avoids presenting style preferences as bugs.

@@ -13,6 +13,9 @@ def print_goodbye():
 def print_no_file():
     print(f"{COMPUTER}{CONFUSED} No file path provided.")
 
+def print_no_query():
+    print(f"{COMPUTER}{CONFUSED} No query provided.")
+
 def print_exception(error):
     print(f"{COMPUTER}{CONFUSED} Error encountered: {error}")
 
