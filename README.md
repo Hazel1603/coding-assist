@@ -42,7 +42,18 @@ This project deliberately focuses on reliability and security:
 
 ## Current Status
 
-Not yet implemented.
+v0.1 is implemented. The CLI can safely read and explain a specific Java file
+inside a configured workspace.
+
+Current capabilities:
+
+- interactive `explain <path>` command
+- workspace-boundary and path-traversal protection
+- Java-only file validation
+- bounded UTF-8 file reading
+- streamed model responses
+- friendly file and model error reporting
+- unit tests using a fixture Java file
 
 The intended tool surface is:
 
@@ -109,30 +120,37 @@ Keep these two kinds of state separate:
 
 Conversation history alone is not enough to make a coding agent reliable after a failure or context reset.
 
-## Suggested CLI Shape
+## Run v0.1
 
-The exact interface can evolve, but a simple starting point is:
+Create a `.env` file containing `OPENAI_API_KEY` and `OPENAI_MODEL`, then run:
 
 ```bash
-python3 -m coding_assistant.cli --workspace path/to/java/project
+python3 -m cd_assist.cli --workspace path/to/java/project
 ```
 
-Example interactive commands:
+Explain a Java file using a path relative to that workspace:
 
 ```text
 explain src/main/java/com/example/UserService.java
-find bugs in src/main/java/com/example/UserService.java
-generate tests for src/main/java/com/example/UserService.java
-refactor src/main/java/com/example/UserService.java
-state
-history
 exit
+```
+
+To try the included fixture:
+
+```bash
+python3 -m cd_assist.cli --workspace tests/fixtures
+```
+
+Then enter:
+
+```text
+explain ExampleService.java
 ```
 
 Run the project's tests:
 
 ```bash
-python3 -m unittest discover
+python3 -m unittest discover -v
 ```
 
 ## Tool Design
